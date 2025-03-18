@@ -55,17 +55,16 @@ public class DriverRepository : IDriverRepository
     public string AlphabetizeDriverName(int id)
     {
         var driver = GetDriverById(id);
-        return driver != null ? string.Concat((driver.FirstName + " " + driver.LastName)) : "";
+        string firstName = new string(driver.FirstName.OrderBy(c => c).ToArray());
+        string lastName = new string(driver.LastName.OrderBy(c => c).ToArray());    
+        return driver != null ? string.Concat(firstName+ " " +lastName ) : "";
     }
 
     public List<string> AlphabetizeDriverNames()
     {
-        var names = new List<string>();
-        foreach (var driver in GetAllDrivers())
-        {
-            names.Add(driver != null ? string.Concat((driver.FirstName + " " + driver.LastName)) : "");
-        }
-
-        return names;
+        return GetAllDrivers()
+            .Select(driver => $"{driver.FirstName} {driver.LastName}") // Get full name
+            .OrderBy(name => name) // Sort alphabetically
+            .ToList();
     }
 }
