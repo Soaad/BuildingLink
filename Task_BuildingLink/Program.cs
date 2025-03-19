@@ -4,6 +4,7 @@ using Task_BuildingLink.Application;
 using Task_BuildingLink.Domain.Contracts;
 using Task_BuildingLink.Infrastructure.Repositories;
 using Serilog;
+using Task_BuildingLink.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,11 @@ builder.Services.AddScoped<IDriverService, DriverService>();
 
 //add serilog
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+   // .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", 
+       rollingInterval: RollingInterval.Day,
+       outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}",
+        retainedFileCountLimit: 7) // Keep logs for the last 7 days
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -38,5 +42,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.Run();
 
