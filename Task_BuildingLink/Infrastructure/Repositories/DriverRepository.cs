@@ -128,8 +128,8 @@ public class DriverRepository : IDriverRepository
             foreach (var name in names)
             {
                 _dbConnection.Execute(
-                    "INSERT INTO Drivers (FirstName, LastName, Email, PhoneNumber) VALUES (@FirstName, 'Random', @Email, '123456789')",
-                    new { FirstName = name, Email = $"{name.ToLower()}@example.com" });
+                    "INSERT INTO Drivers (FirstName, LastName, Email, PhoneNumber) VALUES (@FirstName, @LastName, @Email, '123456789')",
+                    new { FirstName = name,LastName="Random"+name[1], Email = $"{name.ToLower()}@example.com" });
             }
         }
         catch (SqliteException ex)

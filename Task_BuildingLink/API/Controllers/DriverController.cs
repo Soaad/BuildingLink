@@ -56,6 +56,10 @@ public class DriverController : ControllerBase
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             _driverService.CreateDriver(driver);
             return CreatedAtAction(nameof(GetDriver), new { id = driver.Id }, driver);
 
@@ -73,6 +77,10 @@ public class DriverController : ControllerBase
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             if (_driverService.UpdateDriver(id, driver))
             {
                 return NoContent();
